@@ -41,7 +41,7 @@ function createNewUser(user) {
     // });
 };
 
-
+//  Takes in username in string format.
 //  Returns user object in JSON
 function getUser(user) {
     var retUser;
@@ -55,6 +55,9 @@ function getUser(user) {
     return retUser;
 };
 
+
+//  Takes in username in string format.
+//  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
     var result;
     var query = 'SELECT * FROM citations WHERE user = ' + user;
@@ -66,6 +69,9 @@ function getReference(user) {
     return result;
 };
 
+
+//  Updates password for the inputted user.
+//  Takes in user as an object with user and password sub-variables.
 function setPassword(user) {
   bcrypt.hash(user.password, 0, function(err, hash) {
     if (err) throw err;
@@ -76,6 +82,7 @@ function setPassword(user) {
     });
   });
 };
+
 
 //  Terminates the mysql connection.
 function closeConnection() {
