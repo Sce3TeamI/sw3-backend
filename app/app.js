@@ -1,11 +1,17 @@
 var mysql = require('mysql');
-var connection = mysql.connection({
+var connection;
+
+
+//  Sets up mysql connection.
+function setupConnection() {
+    connection = mysql.connection({
     host        : 'localhost',
     user        : 'root',
     password    : 'root',
     database    : 'test2',
     port        : '8889'
-});
+    })
+};
 
 
 //  Checks to see if user exists.
