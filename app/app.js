@@ -109,6 +109,7 @@ router.get('/',function(req, res){
     console.log('root');
 });
 
+//User Login Function. Make a URI: http://HOST:PORT/api/loginuser?email=INPUT_EMAIL&password=INPUT_PASSWORD
 router.get('/loginUser', function(req, res) {
   console.log("login");
 	var email = req.query.email;
@@ -141,6 +142,20 @@ router.get('/createUser', function(req, res){
     surname: surname
   };
   CreatUser(user);
+});
+
+//User Login Function. Make a URI: http://HOST:PORT/api/addreference?
+router.get('/addReference', function(req, res){
+  //var refID = req.query.referenceID
+
+});
+
+router.get('/removeRefence', function(req, res){
+
+});
+
+router.get('/getUserReferences', function(req, res){
+
 });
 
 /***Here finishes the rest-api code.***/
