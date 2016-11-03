@@ -38,7 +38,7 @@ function createNewUser(user) {
 //  Returns user object in JSON
 function getUser(user) {
     var retUser;
-    var query = 'SELECT * FROM users WHERE user = ' + user;
+    var query = 'SELECT users.user, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
     connection.query(query, function(err, rows) {
         if (err) throw err;
         if (rows)
@@ -78,4 +78,3 @@ client.on('close', function() {
 	console.log('Connection closed');
 });
 //Here we finish the server connection functions.
-
