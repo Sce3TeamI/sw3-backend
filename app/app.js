@@ -35,10 +35,10 @@ function createNewUser(user) {
         if (err) throw err;
     });
 
-    var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
-    connection.query(query2, function(err) {
-        if (err) throw err;
-    });
+    // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
+    // connection.query(query2, function(err) {
+    //     if (err) throw err;
+    // });
 };
 
 
