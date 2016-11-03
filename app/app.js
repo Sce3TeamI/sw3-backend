@@ -10,8 +10,8 @@ var connection = mysql.connection({
 
 //  Checks to see if user exists.
 //  Returns true or false
-function userExists(user) {
-    var query = 'SELECT * FROM users WHERE user = ' + user;
+function userExists(email) {
+    var query = 'SELECT * FROM users WHERE user = ' + email;
     connection.query(query, function(err, rows) {
         if (err) throw err;
         if (rows) return true;
@@ -57,8 +57,8 @@ function closeConnection() {
 //Here starts the server connection setting.
 var net = require('net');
 
-var HOST = '127.0.0.1'
-var PORT = '3000'
+var SERVER_HOST = '127.0.0.1'
+var SERVER_PORT = '3000'
 
 //Initiate connection to the server
 var client = new net.Socket();
@@ -79,3 +79,27 @@ client.on('close', function() {
 });
 //Here we finish the server connection functions.
 
+//Here starts the rest-api code.
+var express = require('express');
+var app = express();
+var router = express.Router();
+var API_PORT = 8999 //***TODO: SET THIS***
+app.use('/api', router);
+app.listen(API_PORT);
+
+router.get('/loginUser', function(req, res) {
+	var email = req.params.email;
+	var password = req.params.password;
+	if (userExists(email)){
+		var currentUser = JSON.parse(getUser(email));
+		if (currentUser.password != password){
+			res.send('Wrong Password')
+		}
+		else{
+			res.send()
+		}
+	}
+
+});
+
+//Here finishes the rest-api code.
