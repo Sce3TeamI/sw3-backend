@@ -99,8 +99,8 @@ router.get('/',function(req, res){
 
 router.get('/loginUser', function(req, res) {
   console.log("login");
-	var email = req.params.email;
-	var password = req.params.password;
+	var email = req.query.email;
+	var password = req.query.password;
   console.log("Email: " + email);
   console.log("Password: " + password);
 	// if (userExists(email)){
