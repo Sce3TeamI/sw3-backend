@@ -93,6 +93,10 @@ var API_PORT = 8999 //***TODO: SET THIS***
 app.use('/api', router);
 app.listen(API_PORT);
 
+router.get('/',function(req, res){
+    console.log('SHIT');
+});
+
 router.get('/loginUser', function(req, res) {
 	var email = req.params.email;
 	var password = req.params.password;
