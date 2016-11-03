@@ -94,7 +94,7 @@ app.use('/api', router);
 app.listen(API_PORT);
 
 router.get('/',function(req, res){
-    console.log('I am Here yay');
+    console.log('SHIT');
 });
 
 router.get('/loginUser', function(req, res) {
