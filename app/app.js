@@ -89,7 +89,7 @@ function closeConnection() {
 var express = require('express');
 var app = express();
 var router = express.Router();
-var API_PORT = 8999 //***TODO: SET THIS***
+var API_PORT = 8998 //***TODO: SET THIS***
 app.use('/api', router);
 app.listen(API_PORT);
 
@@ -98,6 +98,7 @@ router.get('/',function(req, res){
 });
 
 router.get('/loginUser', function(req, res) {
+    console.log("login");
 	var email = req.params.email;
 	var password = req.params.password;
 	if (userExists(email)){
