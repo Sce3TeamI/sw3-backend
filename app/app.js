@@ -96,7 +96,7 @@ router.get('/loginUser', function(req, res) {
 			res.send('Wrong Password')
 		}
 		else{
-			res.send()
+			res.send(currentUser)
 		}
 	}
 
