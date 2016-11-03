@@ -94,15 +94,15 @@ app.use('/api', router);
 app.listen(API_PORT);
 
 router.get('/',function(req, res){
-    console.log('SHIT');
+    console.log('root');
 });
 
 router.get('/loginUser', function(req, res) {
   console.log("login");
 	var email = req.params.email;
 	var password = req.params.password;
-  console.log(email);
-  console.log(password);
+  console.log("Email: " + email);
+  console.log("Password: " + password);
 	// if (userExists(email)){
 	// 	var currentUser = JSON.parse(getUser(email));
 	// 	if (currentUser.password != password){
