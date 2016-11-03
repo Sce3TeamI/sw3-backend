@@ -13,7 +13,6 @@ function setupConnection() {
     })
 };
 
-
 //  Checks to see if user exists.
 //  Returns true or false
 function userExists(email) {
@@ -86,6 +85,7 @@ function closeConnection() {
 // //Here we finish the server connection functions.
 
 //Here starts the rest-api code.
+
 var express = require('express');
 var app = express();
 var router = express.Router();
@@ -98,18 +98,20 @@ router.get('/',function(req, res){
 });
 
 router.get('/loginUser', function(req, res) {
-    console.log("login");
+  console.log("login");
 	var email = req.params.email;
 	var password = req.params.password;
-	if (userExists(email)){
-		var currentUser = JSON.parse(getUser(email));
-		if (currentUser.password != password){
-			res.send('Wrong Password')
-		}
-		else{
-			res.send(currentUser)
-		}
-	}
+  console.log(email);
+  console.log(password);
+	// if (userExists(email)){
+	// 	var currentUser = JSON.parse(getUser(email));
+	// 	if (currentUser.password != password){
+	// 		res.send('Wrong Password')
+	// 	}
+	// 	else{
+	// 		res.send(currentUser)
+	// 	}
+	// }
 
 });
 
