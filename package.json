@@ -1,0 +1,11 @@
+{
+    "name": "scenarioweek3-backend",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Sce3TeamI/sw3-backend"
+    },
+    "dependencies": {
+        "mysql": "14.14"
+    }
+}
