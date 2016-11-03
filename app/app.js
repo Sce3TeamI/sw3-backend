@@ -64,7 +64,18 @@ function getReference(user) {
         result = JSON.stringify(rows);
     });
     return result;
-}
+};
+
+function setPassword(user) {
+  bcrypt.hash(user.password, 0, function(err, hash) {
+    if (err) throw err;
+
+    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
+    connection.query(query, function(err) {
+      if (err) throw err;
+    });
+  });
+};
 
 //  Terminates the mysql connection.
 function closeConnection() {
