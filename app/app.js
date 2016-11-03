@@ -1,17 +1,22 @@
 var mysql = require('mysql');
-var connection = mysql.connection({
+var connection;
+
+
+//  Sets up mysql connection.
+function setupConnection() {
+    connection = mysql.connection({
     host        : 'localhost',
     user        : 'root',
     password    : 'root',
     database    : 'test2',
     port        : '8889'
-});
-
+    })
+};
 
 //  Checks to see if user exists.
 //  Returns true or false
-function userExists(user) {
-    var query = 'SELECT * FROM users WHERE user = ' + user;
+function userExists(email) {
+    var query = 'SELECT * FROM users WHERE user = ' + email;
     connection.query(query, function(err, rows) {
         if (err) throw err;
         if (rows) return true;
@@ -65,27 +70,60 @@ function closeConnection() {
 };
 
 
-//Here starts the server connection setting.
-var net = require('net');
+// //Here starts the server connection setting.
+// var net = require('net');
 
-var HOST = '127.0.0.1'
-var PORT = '3000'
+// var SERVER_HOST = '127.0.0.1'
+// var SERVER_PORT = '3000'
 
-//Initiate connection to the server
-var client = new net.Socket();
-client.connect(PORT, HOST, function() {
-	console.log('Connected');
-	client.write('Hello, server! From Client.');
+// //Initiate connection to the server
+// var client = new net.Socket();
+// client.connect(PORT, HOST, function() {
+// 	console.log('Connected');
+// 	client.write('Hello, server! From Client.');
+// });
+
+// //Gets response from server
+// client.on('data', function(data) {
+// 	console.log('Received: ' + data);
+// 	client.destroy(); // kill client after server's response
+// });
+
+// //Close connection with server.
+// client.on('close', function() {
+// 	console.log('Connection closed');
+// });
+// //Here we finish the server connection functions.
+
+//Here starts the rest-api code.
+
+var express = require('express');
+var app = express();
+var router = express.Router();
+var API_PORT = 8998 //***TODO: SET THIS***
+app.use('/api', router);
+app.listen(API_PORT);
+
+router.get('/',function(req, res){
+    console.log('root');
 });
 
-//Gets response from server
-client.on('data', function(data) {
-	console.log('Received: ' + data);
-	client.destroy(); // kill client after server's response
+router.get('/loginUser', function(req, res) {
+  console.log("login");
+	var email = req.params.email;
+	var password = req.params.password;
+  console.log("Email: " + email);
+  console.log("Password: " + password);
+	// if (userExists(email)){
+	// 	var currentUser = JSON.parse(getUser(email));
+	// 	if (currentUser.password != password){
+	// 		res.send('Wrong Password')
+	// 	}
+	// 	else{
+	// 		res.send(currentUser)
+	// 	}
+	// }
+
 });
 
-//Close connection with server.
-client.on('close', function() {
-	console.log('Connection closed');
-});
-//Here we finish the server connection functions.
+//Here finishes the rest-api code.
