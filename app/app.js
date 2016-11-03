@@ -95,8 +95,8 @@ function closeConnection() {
 // });
 // //Here we finish the server connection functions.
 
-//Here starts the rest-api code.
 
+/***Here starts the rest-api code.***/
 var express = require('express');
 var app = express();
 var router = express.Router();
@@ -110,20 +110,36 @@ router.get('/',function(req, res){
 
 router.get('/loginUser', function(req, res) {
   console.log("login");
-	var email = req.params.email;
-	var password = req.params.password;
+	var email = req.query.email;
+	var password = req.query.password;
   console.log("Email: " + email);
   console.log("Password: " + password);
-	// if (userExists(email)){
-	// 	var currentUser = JSON.parse(getUser(email));
-	// 	if (currentUser.password != password){
-	// 		res.send('Wrong Password')
-	// 	}
-	// 	else{
-	// 		res.send(currentUser)
-	// 	}
-	// }
-
+	if (userExists(email)){
+		var currentUser = JSON.parse(getUser(email));
+		if (currentUser.password != password){
+			res.send('Wrong Password')
+		}
+		else{
+			res.send(currentUser)
+		}
+	}
 });
 
-//Here finishes the rest-api code.
+//CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?email=INPUT_EMAIL&password=INPUT_PASSWORD&firstname=INPUT_FIRSTNAME&lastname=INPUT_LASTNAME
+router.get('/createUser', function(req, res){
+  console.log("Make user");
+
+  var email = req.query.email;
+	var password = req.query.password;
+  var firstname = req.query.firstname;
+  var surname = req.query.surname;
+  var user = {
+    email: email,
+    password: password,
+    firstname: firstname,
+    surname: surname
+  };
+  CreatUser(user);
+});
+
+/***Here finishes the rest-api code.***/
