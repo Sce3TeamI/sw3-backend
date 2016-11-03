@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var connection;
 
+// setupConnection();
 
 //  Sets up mysql connection.
 function setupConnection() {
