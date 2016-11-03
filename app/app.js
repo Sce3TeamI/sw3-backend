@@ -60,30 +60,30 @@ function closeConnection() {
 };
 
 
-//Here starts the server connection setting.
-var net = require('net');
+// //Here starts the server connection setting.
+// var net = require('net');
 
-var SERVER_HOST = '127.0.0.1'
-var SERVER_PORT = '3000'
+// var SERVER_HOST = '127.0.0.1'
+// var SERVER_PORT = '3000'
 
-//Initiate connection to the server
-var client = new net.Socket();
-client.connect(PORT, HOST, function() {
-	console.log('Connected');
-	client.write('Hello, server! From Client.');
-});
+// //Initiate connection to the server
+// var client = new net.Socket();
+// client.connect(PORT, HOST, function() {
+// 	console.log('Connected');
+// 	client.write('Hello, server! From Client.');
+// });
 
-//Gets response from server
-client.on('data', function(data) {
-	console.log('Received: ' + data);
-	client.destroy(); // kill client after server's response
-});
+// //Gets response from server
+// client.on('data', function(data) {
+// 	console.log('Received: ' + data);
+// 	client.destroy(); // kill client after server's response
+// });
 
-//Close connection with server.
-client.on('close', function() {
-	console.log('Connection closed');
-});
-//Here we finish the server connection functions.
+// //Close connection with server.
+// client.on('close', function() {
+// 	console.log('Connection closed');
+// });
+// //Here we finish the server connection functions.
 
 //Here starts the rest-api code.
 var express = require('express');
