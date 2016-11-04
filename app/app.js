@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var bcrypt = require('bcrypt');
 var connection;
 
 // setupConnection();
@@ -34,13 +35,13 @@ function createNewUser(user) {
         if (err) throw err;
     });
 
-    var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
-    connection.query(query2, function(err) {
-        if (err) throw err;
-    });
+    // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
+    // connection.query(query2, function(err) {
+    //     if (err) throw err;
+    // });
 };
 
-
+//  Takes in username in string format.
 //  Returns user object in JSON
 function getUser(user) {
     var retUser;
@@ -54,6 +55,9 @@ function getUser(user) {
     return retUser;
 };
 
+
+//  Takes in username in string format.
+//  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
     var result;
     var query = 'SELECT * FROM citations WHERE user = ' + user;
@@ -63,7 +67,22 @@ function getReference(user) {
         result = JSON.stringify(rows);
     });
     return result;
-}
+};
+
+
+//  Updates password for the inputted user.
+//  Takes in user as an object with user and password sub-variables.
+function setPassword(user) {
+  bcrypt.hash(user.password, 0, function(err, hash) {
+    if (err) throw err;
+
+    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
+    connection.query(query, function(err) {
+      if (err) throw err;
+    });
+  });
+};
+
 
 //  Terminates the mysql connection.
 function closeConnection() {
