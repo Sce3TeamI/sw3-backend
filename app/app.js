@@ -16,24 +16,6 @@ var connection = mysql.createConnection(
 
 ///// Functions to deal with the USER /////
 
-//  Checks to see if user exists.
-//  Returns true or false
-function userExists(user) {
-    connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows) {
-        if (err)
-          throw err;
-
-        console.log("The current user appears " + rows.length + " times.");
-        var count = rows.length;
-
-        if (count > 0)
-          return true;
-        else  
-          return false;
-    });
-};
-
-
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(username, password) {
@@ -198,7 +180,7 @@ router.get('/createUser', function(req, res){
   
   console.log("Make user: " + username);
   
-  connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows)
+  connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
   {
     if (rows.count > 0)
     {
