@@ -201,7 +201,8 @@ router.get('/createUser', function(req, res){
   }
   else
   {
-    if (createNewUser(username, password));
+    createNewUser(username, password);
+    res.send("USER_CREATED");
   }
 });
 
