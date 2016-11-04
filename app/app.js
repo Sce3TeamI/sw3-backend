@@ -31,7 +31,7 @@ function userExists(user) {
 // Takes an input of a JSON object.
 function createNewUser(user) {
   var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(user.password, 10);
+  var hash = bcrypt.hashSync(user.password, salt);
   
   connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [user.user, hash], function(err2) {
     if (err2)
