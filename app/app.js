@@ -146,6 +146,7 @@ app.listen(API_PORT);
 
 router.get('/',function(req, res){
     console.log('root');
+    res.send('API_ROOT');
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/loginuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
@@ -166,6 +167,9 @@ router.get('/loginUser', function(req, res) {
       }
     });
 	}
+  else {
+    res.send('USER_DOES_NOT_EXIST');
+  }
 });
 
 //CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
