@@ -35,10 +35,12 @@ function userExists(user) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-    var query1 = 'INSERT INTO users (userID, user, password) VALUES (' + user.userID + user.user + user.password + ')';
+    var query1 = 'INSERT INTO users (userID, user, password) VALUES (NULL, ' + user.user + ', NULL)';
     connection.query(query1, function(err) {
         if (err) throw err;
     });
+
+    setPassword(user);
 
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
@@ -91,7 +93,10 @@ function getReference(user) {
 };
 
 function addReference(reference) {
-
+  var query = 'INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL,' + reference.link + ',' + reference.notes + ',' + reference.title + ',' + reference.user + ')'
+  connection.query(query, function(err) {
+    if (err) throw err;
+  });
 };
 
 function editReference(reference) {
