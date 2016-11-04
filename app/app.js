@@ -232,7 +232,7 @@ router.get('/addReference', function(req, res){
 
 router.get('/removeReference', function(req, res){
   var citationID = req.query.citationID;
-  removeRefence(citationID);
+  removeReference(citationID);
   res.send('REF_REMOVED');
 });
 
