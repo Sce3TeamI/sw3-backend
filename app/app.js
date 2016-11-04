@@ -257,7 +257,7 @@ router.get('/getUserReferences', function(req, res){
     if (err)
       throw err;
 
-    if (rows > 0)
+    if (rows.length > 0)
       res.send(JSON.stringify(rows));
     else
       res.send(JSON.stringify([]));
