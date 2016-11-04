@@ -2,9 +2,6 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 var express = require('express');
 var config = require("./config.json");
-var cookieParser = require("cookie-parser");
-var session = require("express-session");
-
 var connection = mysql.createConnection(
   {
     host        : config.host,
@@ -15,9 +12,20 @@ var connection = mysql.createConnection(
   }
 );
 
-console.log("Backend started and connected to the database.");
+
 
 ///// Functions to deal with the USER /////
+
+//  Checks to see if user exists.
+//  Returns true or false
+function userExists(user) {
+    connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows) {
+        if (err) throw err;
+        if (rows) return true;
+        else return false;
+    });
+};
+
 
 // Creates new user on the database.
 // Takes an input of a JSON object.
@@ -27,11 +35,18 @@ function createNewUser(username, password) {
   console.log("Attempting to hash " + password + " with salt " + salt);
 
   var hash = bcrypt.hashSync(password, salt);
-  
+
   connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [username, hash], function(err2) {
     if (err2)
       throw err2;
+
+    return true;
   });
+    // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
+    // connection.query(query2, function(err) {
+    //     if (err) throw err;
+    // });
+    return false;
 };
 
 //  Takes in username in string format.
@@ -39,7 +54,7 @@ function createNewUser(username, password) {
 function getUser(username) {
     var retUser;
     // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
-    var query = 
+    var query =
     connection.query('SELECT * FROM users WHERE username = ?', [username], function(err, rows) {
         if (err) throw err;
         if (rows)
@@ -67,15 +82,13 @@ function setPassword(user) {
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
-    var result = null;
-    console.log("Getting all citations for user " + user);
+    var result;
     connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
-      if (err)
-        throw err;
-
-      return JSON.stringify(rows);
+      if (err) throw err;
+      if (rows)
+        result = JSON.stringify(rows);
     });
-    
+    return result;
 };
 
 function addReference(reference) {
@@ -135,15 +148,6 @@ function closeConnection() {
 var app = express();
 var router = express.Router();
 var API_PORT = 3000 //***TODO: SET THIS***
-app.use(cookieParser());
-app.use(session(
-  {
-    secret: "KNX3VpZS25qH2jP9TSC5896b6nv28n",
-    resave: false,
-    saveUninitialized: true
-  }
-));
-
 app.use('/api', router);
 app.listen(API_PORT);
 
@@ -159,64 +163,54 @@ router.get('/loginUser', function(req, res) {
 	var password = req.query.password;
   console.log("Username: " + username);
   console.log("Password: " + password);
-
-  connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
-  {
-    if (rows.length > 0)
-    {
-      var user = rows[0];
-      if (bcrypt.compareSync(password, user.password))
-      {
-        req.session.user = user.user;
-        req.session.id = user.userID;
-
-        console.log("Getting all citations for user " + user);
-        connection.query('SELECT * FROM citations WHERE user = ?', [user.user], function(err, rows) {
-        if (err)
-          throw err;
-
-          var data =
-          {
-              "username": user.user,
-              "userID": user.userid,
-              "citations": rows
-          };
-
-          res.send(data);
-        });
-      }
-      else
-      {
-        res.send('WRONG_PASSWORD');
-      }
+	if (userExists(username)){
+		var currentUser = JSON.parse(getUser(username));
+    if (bcrypt.compareSync(password, currentUser.password)) {
+      req.session.user = username;
+      req.send(getReference(currentUser));
     }
-    else
-    {
-      res.send('WRONG_USERNAME');
+    else {
+      res.send('WRONG_PASSWORD');
     }
-  });
+    // bcrypt.compare(password, currentUser.password, function(err, passRes) {
+    //   if (passRes == false) {
+    //     res.send('WRONG_PASSWORD')
+    //   }
+    //   else {
+    //     res.send(getReference(currentUser));
+    //   }
+    // });
+
+	}
+  else {
+    res.send('USER_DOES_NOT_EXIST');
+  }
 });
 
-//CreatUser Function. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
+//CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
 router.get('/createUser', function(req, res){
   var username = req.query.username;
 	var password = req.query.password;
-  
+
   console.log("Make user: " + username);
-  
-  connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
+
+  if (userExists(username))
   {
-    if (rows.length > 0)
+    res.send('USER_EXISTS');
+  }
+  else
+  {
+    if (createNewUser(username, password))
     {
-      res.send('USER_EXISTS');
+      res.send('SUCCESS');
     }
     else
     {
-      createNewUser(username, password);
-      res.send("USER_CREATED");
+      res.send('FAILURE');
     }
-  });
- });
+  }
+
+});
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
 router.get('/addReference', function(req, res){
@@ -224,7 +218,7 @@ router.get('/addReference', function(req, res){
   //title, link, notes,
   var title = req.query.title;
   var link = req.query.link;
-  var notes = req.query.link;
+  var notes = req.query.notes;
   var user = req.query.user;
   var reference = {
     title: title,
@@ -238,6 +232,7 @@ router.get('/addReference', function(req, res){
 router.get('/removeRefence', function(req, res){
   var citationID = req.query.citationID;
   removeRefence(citationID);
+  res.send('REF_REMOVED');
 });
 
 router.get('/editReference', function(req, res){
@@ -254,17 +249,13 @@ router.get('/editReference', function(req, res){
     user: user
   };
   editReference(reference);
+  res.send('REF_EDITED');
 });
 
 router.get('/getUserReferences', function(req, res){
   var user = req.query.user;
-  getReference(user);
-});
-
-router.get('/logout', function(req, rest)
-{
-  req.session.destroy();
-  res.send("LOGGED_OUT");
+  var result = getReference(user);
+  res.send(result);
 });
 
 /***Here finishes the rest-api code.***/
