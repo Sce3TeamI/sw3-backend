@@ -72,8 +72,17 @@ function getReference(user) {
     connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
       if (err)
         throw err;
-
-      return JSON.stringify(rows);
+      if (rows > 0)
+        return JSON.stringify(rows);
+      else {
+        return {
+          title: '',
+          citationID: '',
+          link: '',
+          notes: '',
+          user: user
+        }
+      }
     });
 
 };
@@ -255,8 +264,8 @@ router.get('/editReference', function(req, res){
     notes: notes,
     user: user
   };
-  var newRef = editReference(reference);
-  res.send(newRef);
+  editReference(reference);
+  res.send('REF_EDITED');
 });
 
 router.get('/getUserReferences', function(req, res){
