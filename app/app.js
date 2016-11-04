@@ -23,25 +23,28 @@ function setupConnection() {
 //  Checks to see if user exists.
 //  Returns true or false
 function userExists(user) {
+  setupConnection();
     var query = 'SELECT * FROM users WHERE user = ' + user;
     connection.query(query, function(err, rows) {
         if (err) throw err;
         if (rows) return true;
         else return false;
     });
+  closeConnection();
 };
 
 
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
+  setupConnection();
     var query1 = 'INSERT INTO users (userID, user, password) VALUES (NULL, ' + user.user + ', NULL)';
     connection.query(query1, function(err) {
         if (err) throw err;
     });
 
-    setPassword(user);
-
+  setPassword(user);
+  closeConnection;
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
     //     if (err) throw err;
@@ -51,20 +54,24 @@ function createNewUser(user) {
 //  Takes in username in string format.
 //  Returns user object in JSON
 function getUser(user) {
-    var retUser;
-    // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
-    var query = 'SELECT * FROM users'
-    connection.query(query, function(err, rows) {
-        if (err) throw err;
-        if (rows)
-            retUser = JSON.stringify(rows);
-    });
-    return retUser;
+  setupConnection();
+  var retUser;
+  // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
+  var query = 'SELECT * FROM users'
+  connection.query(query, function(err, rows) {
+    if (err) throw err;
+    if (rows)
+      retUser = JSON.stringify(rows);
+  });
+
+  closeConnection();
+  return retUser;
 };
 
 //  Updates password for the inputted user.
 //  Takes in user as an object with user and password sub-variables.
 function setPassword(user) {
+  setupConnection();
   bcrypt.hash(user.password, 0, function(err, hash) {
     if (err) throw err;
 
@@ -73,6 +80,7 @@ function setPassword(user) {
       if (err) throw err;
     });
   });
+  closeConnection();
 };
 
 
@@ -82,6 +90,7 @@ function setPassword(user) {
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
+  setupConnection();
     var result;
     var query = 'SELECT * FROM citations WHERE user = ' + user;
     connection.query(query, function(err, rows) {
@@ -89,28 +98,35 @@ function getReference(user) {
       if (rows)
         result = JSON.stringify(rows);
     });
-    return result;
+  closeConnection();
+  return result;
 };
 
 function addReference(reference) {
+  setupConnection();
   var query = 'INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL,' + reference.link + ',' + reference.notes + ',' + reference.title + ',' + reference.user + ')'
   connection.query(query, function(err) {
     if (err) throw err;
   });
+  setupConnection();
 };
 
 function editReference(reference) {
+  setupConnection();
   var query = 'UPDATE citations SET link=' + reference.link + ', notes=' + reference.notes + ', title=' + reference.title + 'WHERE citationID=' + reference.citationID + ')';
   connection.query(query, function(err) {
     if (err) throw err;
   });
+  closeConnection();
 };
 
 function removeReference(reference) {
+  setupConnection();
   var query = 'DELETE FROM citations WHERE citationID =' + reference;
   connection.query(query, function(err) {
     if (err) throw err;
   });
+  closeConnection();
 };
 
 
