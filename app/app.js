@@ -169,7 +169,21 @@ router.get('/loginUser', function(req, res) {
       {
         req.session.user = user.user;
         req.session.id = user.userID;
-        res.send(getReference(user.user));
+
+        console.log("Getting all citations for user " + user);
+        connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
+        if (err)
+          throw err;
+
+          var data =
+          {
+              "username": user.user,
+              "userID": user.userid,
+              "citations": rows
+          };
+
+          res.send(data);
+        });
       }
       else
       {
