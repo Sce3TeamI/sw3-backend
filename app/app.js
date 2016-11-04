@@ -23,6 +23,8 @@ function userExists(user) {
         if (err)
           throw err;
 
+        console.log("Current user rows: " + rows);
+
         return rows.length > 0;
     });
 };
