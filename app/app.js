@@ -201,14 +201,38 @@ router.get('/addReference', function(req, res){
   var link = req.query.link;
   var notes = req.query.link;
   var user = req.query.user;
-
+  var reference = {
+    title: title,
+    link: link,
+    notes: notes,
+    user: user
+  };
+  addReference(reference)
 });
 
 router.get('/removeRefence', function(req, res){
+  var citationID = req.query.citationID;
+  removeRefence(citationID);
+});
 
+router.get('/editReference', function(req, res){
+  var citationID = req.query.citationID;
+  var title = req.query.title;
+  var link = req.query.link;
+  var notes = req.query.link;
+  var user = req.query.user;
+  var reference = {
+    citationID: citationID,
+    title: title,
+    link: link,
+    notes: notes,
+    user: user
+  };
+  editReference(reference);
 });
 
 router.get('/getUserReferences', function(req, res){
+  var user = req.query.user;
 
 });
 
