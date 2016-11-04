@@ -151,7 +151,7 @@ function closeConnection() {
 /***Here starts the rest-api code.***/
 var app = express();
 var router = express.Router();
-var API_PORT = 8998 //***TODO: SET THIS***
+var API_PORT = 3000 //***TODO: SET THIS***
 app.use('/api', router);
 app.listen(API_PORT);
 
