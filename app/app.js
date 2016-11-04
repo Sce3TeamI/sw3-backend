@@ -138,7 +138,6 @@ var app = express();
 var router = express.Router();
 var API_PORT = 3000 //***TODO: SET THIS***
 app.use(cookieParser());
-app.use(express.session({secret: "KNX3VpZS25qH2jP9TSC5896b6nv28n"}));
 
 app.use('/api', router);
 app.listen(API_PORT);
