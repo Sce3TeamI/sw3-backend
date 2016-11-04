@@ -65,7 +65,7 @@ function setPassword(user) {
 /////// Functions to deal with the CITATIONS/REFERENCES /////////
 
 function addReference(reference) {
-  connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, req.session.userid], function(err) {
+  connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, reference.user], function(err) {
     if (err) throw err;
   });
 };
