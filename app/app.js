@@ -198,19 +198,32 @@ router.get('/createUser', function(req, res){
   
   console.log("Make user: " + username);
   
-  var exists = userExists(username);
-  console.log("User exists? " + exists);
-  if (exists)
+  connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows)
   {
-    console.log("User " + username + " exists, so we will not create a new user account.");
-    res.send('USER_EXISTS');
-  }
-  else
-  {
-    createNewUser(username, password);
-    res.send("USER_CREATED");
-  }
-});
+    if (rows.count > 0)
+    {
+      res.send('USER_EXISTS');
+    }
+    else
+    {
+      createNewUser(username, password);
+      res.send("USER_CREATED");
+    }
+  });
+
+//   var exists = userExists(username);
+//   console.log("User exists? " + exists);
+//   if (exists)
+//   {
+//     console.log("User " + username + " exists, so we will not create a new user account.");
+//     res.send('USER_EXISTS');
+//   }
+//   else
+//   {
+//     createNewUser(username, password);
+//     res.send("USER_CREATED");
+//   }
+ });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
 router.get('/addReference', function(req, res){
