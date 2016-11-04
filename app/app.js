@@ -97,8 +97,6 @@ function removeReference(reference) {
 };
 
 
-
-
 //  Terminates the mysql connection.
 function closeConnection() {
     connection.end();
@@ -195,6 +193,11 @@ router.get('/loginUser', function(req, res) {
       res.send('WRONG_USERNAME');
     }
   });
+});
+
+router.get('/getLoggedInUser', function(req, res)
+{
+  res.send(req.session.user);
 });
 
 //CreatUser Function. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
