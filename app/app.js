@@ -19,8 +19,7 @@ var connection = mysql.createConnection(
 //  Checks to see if user exists.
 //  Returns true or false
 function userExists(user) {
-    var query = 'SELECT * FROM users WHERE user = ' + user;
-    connection.query(query, function(err, rows) {
+    connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows) {
         if (err) throw err;
         if (rows) return true;
         else return false;
@@ -31,8 +30,7 @@ function userExists(user) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-    var query1 = 'INSERT INTO users (userID, user, password) VALUES (NULL, ' + user.user + ', NULL)';
-    connection.query(query1, function(err) {
+    connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, NULL)', [user.user], function(err) {
         if (err) throw err;
     });
 
@@ -64,8 +62,7 @@ function setPassword(user) {
   bcrypt.hash(user.password, 0, function(err, hash) {
     if (err) throw err;
 
-    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
-    connection.query(query, function(err) {
+    connection.query('UPDATE users SET password= ? WHERE user = ?', [hash, user.user], function(err) {
       if (err) throw err;
     });
   });
@@ -79,8 +76,7 @@ function setPassword(user) {
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
     var result;
-    var query = 'SELECT * FROM citations WHERE user = ' + user;
-    connection.query(query, function(err, rows) {
+    connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
       if (err) throw err;
       if (rows)
         result = JSON.stringify(rows);
@@ -89,22 +85,19 @@ function getReference(user) {
 };
 
 function addReference(reference) {
-  var query = 'INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL,' + reference.link + ',' + reference.notes + ',' + reference.title + ',' + reference.user + ')'
-  connection.query(query, function(err) {
+  connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, reference.user], function(err) {
     if (err) throw err;
   });
 };
 
 function editReference(reference) {
-  var query = 'UPDATE citations SET link=' + reference.link + ', notes=' + reference.notes + ', title=' + reference.title + 'WHERE citationID=' + reference.citationID + ')';
-  connection.query(query, function(err) {
+  connection.query('UPDATE citations SET link = ?, notes = ?, title = ? WHERE citationID = ?)', [reference.link, reference.notes, reference.title, reference.citationID], function(err) {
     if (err) throw err;
   });
 };
 
 function removeReference(reference) {
-  var query = 'DELETE FROM citations WHERE citationID =' + reference;
-  connection.query(query, function(err) {
+  connection.query('DELETE FROM citations WHERE citationID = ?', [reference], function(err) {
     if (err) throw err;
   });
 };
