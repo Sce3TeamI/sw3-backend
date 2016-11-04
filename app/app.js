@@ -233,7 +233,7 @@ router.get('/editReference', function(req, res){
 
 router.get('/getUserReferences', function(req, res){
   var user = req.query.user;
-
+  getReference(user);
 });
 
 /***Here finishes the rest-api code.***/
