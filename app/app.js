@@ -17,6 +17,9 @@ function setupConnection() {
     })
 };
 
+
+///// Functions to deal with the USER /////
+
 //  Checks to see if user exists.
 //  Returns true or false
 function userExists(user) {
@@ -57,6 +60,22 @@ function getUser(user) {
     return retUser;
 };
 
+//  Updates password for the inputted user.
+//  Takes in user as an object with user and password sub-variables.
+function setPassword(user) {
+  bcrypt.hash(user.password, 0, function(err, hash) {
+    if (err) throw err;
+
+    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
+    connection.query(query, function(err) {
+      if (err) throw err;
+    });
+  });
+};
+
+
+
+/////// Functions to deal with the CITATIONS/REFERENCES /////////
 
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
@@ -71,19 +90,19 @@ function getReference(user) {
     return result;
 };
 
+function addReference(reference) {
 
-//  Updates password for the inputted user.
-//  Takes in user as an object with user and password sub-variables.
-function setPassword(user) {
-  bcrypt.hash(user.password, 0, function(err, hash) {
-    if (err) throw err;
-
-    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
-    connection.query(query, function(err) {
-      if (err) throw err;
-    });
-  });
 };
+
+function editReference(reference) {
+
+};
+
+function postReference(reference) {
+
+};
+
+
 
 
 //  Terminates the mysql connection.
