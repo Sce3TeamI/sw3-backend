@@ -198,7 +198,9 @@ router.get('/createUser', function(req, res){
   
   console.log("Make user: " + username);
   
-  if (userExists(username) == true)
+  var exists = userExists(username);
+  console.log("User exists? " + exists);
+  if (exists)
   {
     console.log("User " + username + " exists, so we will not create a new user account.");
     res.send('USER_EXISTS');
