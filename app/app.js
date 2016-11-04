@@ -30,12 +30,16 @@ function userExists(user) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-    connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, NULL)', [user.user], function(err) {
-        if (err) throw err;
+  bcrypt.hash(user.password, 0, function(err, hash) {
+    if (err)
+      throw err;
+    
+    connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [user.user, hash], function(err2) {
+      if (err2)
+        throw err2;
     });
-
-    setPassword(user);
-
+  });
+    
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
     //     if (err) throw err;
