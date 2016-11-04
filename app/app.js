@@ -29,14 +29,14 @@ function userExists(user) {
 
 // Creates new user on the database.
 // Takes an input of a JSON object.
-function createNewUser(user) {
+function createNewUser(username, password) {
   var salt = bcrypt.genSaltSync(10);
 
-  console.log("Attempting to hash " + user.password + " with salt " + salt);
+  console.log("Attempting to hash " + password + " with salt " + salt);
 
-  var hash = bcrypt.hashSync(user.password, salt);
+  var hash = bcrypt.hashSync(password, salt);
   
-  connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [user.user, hash], function(err2) {
+  connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [username, hash], function(err2) {
     if (err2)
       throw err2;
   });
@@ -192,13 +192,10 @@ router.get('/createUser', function(req, res){
   if (userExists(username))
   {
     res.send('USER_EXISTS');
-    return''
+    return;
   }
-  var user = {
-    user: username,
-    password: password
-  };
-  createNewUser(user);
+  
+  createNewUser(username, password);
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
