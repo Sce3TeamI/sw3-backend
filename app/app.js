@@ -182,7 +182,7 @@ router.get('/createUser', function(req, res){
   
   connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
   {
-    if (rows.count > 0)
+    if (rows.length > 0)
     {
       res.send('USER_EXISTS');
     }
