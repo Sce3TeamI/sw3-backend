@@ -64,12 +64,6 @@ function setPassword(user) {
 
 /////// Functions to deal with the CITATIONS/REFERENCES /////////
 
-//  Takes in username in string format.
-//  Returns references assigned to inputted user as a JSON string.
-function getReference(user) {
-
-};
-
 function addReference(reference) {
   connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, reference.user], function(err) {
     if (err) throw err;
@@ -255,8 +249,8 @@ router.get('/editReference', function(req, res){
 });
 
 router.get('/getUserReferences', function(req, res){
-  var user = req.query.user;
-  var userRefs = getReference(user);
+  //var user = req.query.user;
+  //var userRefs = getReference(user);
 
   console.log("Getting all citations for user " + user);
   connection.query('SELECT * FROM citations WHERE user = ?', [req.session.userid], function(err, rows) {
