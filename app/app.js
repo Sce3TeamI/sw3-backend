@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 var express = require('express');
 var config = require("./config.json");
 var cookieParser = require("cookie-parser");
+var session = require("express-session");
 
 var connection = mysql.createConnection(
   {
@@ -138,6 +139,13 @@ var app = express();
 var router = express.Router();
 var API_PORT = 3000 //***TODO: SET THIS***
 app.use(cookieParser());
+app.ise(session(
+  {
+    secret: "KNX3VpZS25qH2jP9TSC5896b6nv28n",
+    resave: false,
+    saveUninitialized: true
+  }
+));
 
 app.use('/api', router);
 app.listen(API_PORT);
