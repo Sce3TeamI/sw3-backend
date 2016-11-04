@@ -29,10 +29,6 @@ function createNewUser(username, password) {
     if (err2)
       throw err2;
   });
-    // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
-    // connection.query(query2, function(err) {
-    //     if (err) throw err;
-    // });
 };
 
 //  Takes in username in string format.
@@ -68,12 +64,17 @@ function setPassword(user) {
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
-    var result;
+    var result = null;
     connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
       if (err) throw err;
       if (rows)
-        result = JSON.stringify(rows);
+        result =  JSON.stringify(rows);
+      else
+        result = 0;
     });
+
+    while(!result);
+
     return result;
 };
 
@@ -159,7 +160,7 @@ router.get('/loginUser', function(req, res) {
       {
         req.session.user = user.user;
         req.session.id = user.userID;
-         req.send(getReference(user));
+        req.send(getReference(user.user));
       }
       else
       {
@@ -173,7 +174,7 @@ router.get('/loginUser', function(req, res) {
   });
 });
 
-//CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
+//CreatUser Function. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
 router.get('/createUser', function(req, res){
   var username = req.query.username;
 	var password = req.query.password;
@@ -192,19 +193,6 @@ router.get('/createUser', function(req, res){
       res.send("USER_CREATED");
     }
   });
-
-//   var exists = userExists(username);
-//   console.log("User exists? " + exists);
-//   if (exists)
-//   {
-//     console.log("User " + username + " exists, so we will not create a new user account.");
-//     res.send('USER_EXISTS');
-//   }
-//   else
-//   {
-//     createNewUser(username, password);
-//     res.send("USER_CREATED");
-//   }
  });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
@@ -248,6 +236,12 @@ router.get('/editReference', function(req, res){
 router.get('/getUserReferences', function(req, res){
   var user = req.query.user;
   getReference(user);
+});
+
+router.get('/logout', function(req, rest)
+{
+  req.session.destroy();
+  res.send("LOGGED_OUT");
 });
 
 /***Here finishes the rest-api code.***/
