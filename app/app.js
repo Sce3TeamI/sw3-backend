@@ -229,7 +229,7 @@ router.get('/addReference', function(req, res){
   addReference(reference)
 });
 
-router.get('/removeRefence', function(req, res){
+router.get('/removeReference', function(req, res){
   var citationID = req.query.citationID;
   removeRefence(citationID);
   res.send('REF_REMOVED');
