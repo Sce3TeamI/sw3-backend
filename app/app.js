@@ -39,11 +39,14 @@ function createNewUser(username, password) {
   connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [username, hash], function(err2) {
     if (err2)
       throw err2;
+
+    return true;
   });
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
     //     if (err) throw err;
     // });
+    return false;
 };
 
 //  Takes in username in string format.
@@ -194,10 +197,19 @@ router.get('/createUser', function(req, res){
   if (userExists(username))
   {
     res.send('USER_EXISTS');
-    return;
   }
-  
-  createNewUser(username, password);
+  else
+  {
+    if (createNewUser(username, password))
+    {
+      res.send('SUCCESS');
+    }
+    else
+    {
+      res.send('FAILURE');
+    }
+  } 
+ 
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
