@@ -1,7 +1,5 @@
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
-var express = require('express');
-var config = require("./config.json");
 var connection;
 
 // setupConnection();
@@ -9,13 +7,15 @@ var connection;
 //  Sets up mysql connection.
 function setupConnection() {
     connection = mysql.connection({
-    host        : config.host,
-    user        : config.user,
-    password    : config.password,
-    database    : config.database,
-    port        : config.port
+    host        : 'localhost',
+    user        : 'root',
+    password    : 'root',
+    database    : 'test2',
+    port        : '8889'
     })
 };
+
+///// Functions to manage the USER /////
 
 //  Checks to see if user exists.
 //  Returns true or false
@@ -43,6 +43,19 @@ function createNewUser(user) {
     // });
 };
 
+//  Updates password for the inputted user.
+//  Takes in user as an object with user and password sub-variables.
+function setPassword(user) {
+  bcrypt.hash(user.password, 0, function(err, hash) {
+    if (err) throw err;
+
+    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
+    connection.query(query, function(err) {
+      if (err) throw err;
+    });
+  });
+};
+
 //  Takes in username in string format.
 //  Returns user object in JSON
 function getUser(user) {
@@ -57,10 +70,11 @@ function getUser(user) {
     return retUser;
 };
 
+////// Functions to manage REFERENCES /////////
 
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
-function getReference(user) {
+function getReferences(user) {
     var result;
     var query = 'SELECT * FROM citations WHERE user = ' + user;
     connection.query(query, function(err, rows) {
@@ -72,17 +86,16 @@ function getReference(user) {
 };
 
 
-//  Updates password for the inputted user.
-//  Takes in user as an object with user and password sub-variables.
-function setPassword(user) {
-  bcrypt.hash(user.password, 0, function(err, hash) {
-    if (err) throw err;
+function addReference(reference) {
 
-    var query = 'UPDATE users SET password=' + hash + 'WHERE user=' + user.user;
-    connection.query(query, function(err) {
-      if (err) throw err;
-    });
-  });
+};
+
+function editReference(reference) {
+
+};
+
+function postReference(reference) {
+
 };
 
 
@@ -119,6 +132,7 @@ function closeConnection() {
 
 
 /***Here starts the rest-api code.***/
+var express = require('express');
 var app = express();
 var router = express.Router();
 var API_PORT = 8998 //***TODO: SET THIS***
@@ -167,7 +181,7 @@ router.get('/createUser', function(req, res){
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
 router.get('/addReference', function(req, res){
   //var refID = req.query.referenceID
-
+  
 });
 
 router.get('/removeRefence', function(req, res){
