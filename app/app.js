@@ -12,7 +12,7 @@ var connection = mysql.createConnection(
   }
 );
 
-
+console.log("Backend started and connected to the database.");
 
 ///// Functions to deal with the USER /////
 
