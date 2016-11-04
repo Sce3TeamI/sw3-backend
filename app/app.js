@@ -24,8 +24,12 @@ function userExists(user) {
           throw err;
 
         console.log("The current user appears " + rows.length + " times.");
-
-        return (rows.length > 0);
+        var count = rows.length;
+        
+        if (count > 0)
+          return true;
+        else  
+          return false;
     });
 };
 
