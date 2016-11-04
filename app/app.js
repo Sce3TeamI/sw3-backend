@@ -64,20 +64,6 @@ function setPassword(user) {
 
 /////// Functions to deal with the CITATIONS/REFERENCES /////////
 
-//  Takes in username in string format.
-//  Returns references assigned to inputted user as a JSON string.
-function getReference(user) {
-    var result = null;
-    console.log("Getting all citations for user " + user);
-    connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
-      if (err)
-        throw err;
-
-      return JSON.stringify(rows);
-    });
-
-};
-
 function addReference(reference) {
   connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, req.session.userid], function(err) {
     if (err) throw err;
@@ -166,7 +152,7 @@ router.get('/loginUser', function(req, res) {
       if (bcrypt.compareSync(password, user.password))
       {
         req.session.user = user.user;
-        req.session.id = user.userID;
+        req.session.userid = user.userID;
 
         console.log("Getting all citations for user " + user);
         connection.query('SELECT * FROM citations WHERE user = ?', [user.user], function(err, rows) {
@@ -258,14 +244,24 @@ router.get('/editReference', function(req, res){
     notes: notes,
     user: user
   };
-  var newRef = editReference(reference);
-  res.send(newRef);
+  editReference(reference);
+  res.send('REF_EDITED');
 });
 
 router.get('/getUserReferences', function(req, res){
-  var user = req.query.user;
-  var userRefs = getReference(user);
-  res.send(userRefs);
+  //var user = req.query.user;
+  //var userRefs = getReference(user);
+
+  console.log("Getting all citations for user " + req.session.userid);
+  connection.query('SELECT * FROM citations WHERE user = ?', [req.session.userid], function(err, rows) {
+    if (err)
+      throw err;
+
+    if (rows.length > 0)
+      res.send(JSON.stringify(rows));
+    else
+      res.send(JSON.stringify([]));
+  });
 });
 
 router.get('/logout', function(req, res)
