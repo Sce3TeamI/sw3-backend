@@ -103,7 +103,7 @@ function editReference(reference) {
 
 };
 
-function postReference(reference) {
+function removeReference(reference) {
 
 };
 
