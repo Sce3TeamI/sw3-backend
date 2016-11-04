@@ -100,11 +100,19 @@ function addReference(reference) {
 };
 
 function editReference(reference) {
+  var query = 'UPDATE citations SET link=' + reference.link + ', notes=' + reference.notes + ', title=' + reference.title + 'WHERE citationID=' + reference.citationID + ')';
+  connection.query(getQuery, function(err) {
+    if (err) throw err;
+  });
 
+  if (oldReference.title != reference.title)
 };
 
-function postReference(reference) {
-
+function removeReference(reference) {
+  var query = 'DELETE FROM citations WHERE citationID =' + reference;
+  connection.query(query, function(err) {
+    if (err) throw err;
+  });
 };
 
 
