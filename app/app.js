@@ -30,16 +30,13 @@ function userExists(user) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-  bcrypt.hash(user.password, 0, function(err, hash) {
-    if (err)
-      throw err;
-    
-    connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [user.user, hash], function(err2) {
-      if (err2)
-        throw err2;
-    });
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(user.password, 10);
+  
+  connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [user.user, hash], function(err2) {
+    if (err2)
+      throw err2;
   });
-    
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
     //     if (err) throw err;
@@ -48,11 +45,11 @@ function createNewUser(user) {
 
 //  Takes in username in string format.
 //  Returns user object in JSON
-function getUser(user) {
+function getUser(username) {
     var retUser;
     // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
-    var query = 'SELECT * FROM users'
-    connection.query(query, function(err, rows) {
+    var query = 
+    connection.query('SELECT * FROM users WHERE username = ?', [username], function(err, rows) {
         if (err) throw err;
         if (rows)
             retUser = JSON.stringify(rows);
@@ -162,14 +159,22 @@ router.get('/loginUser', function(req, res) {
   console.log("Password: " + password);
 	if (userExists(username)){
 		var currentUser = JSON.parse(getUser(username));
-    bcrypt.compare(password, currentUser.password, function(err, passRes) {
-      if (passRes == false) {
-        res.send('WRONG_PASSWORD')
-      }
-      else {
-        res.send(getReference(currentUser));
-      }
-    });
+    if (bcrypt.compareSync(password, currentUser.password)) {
+      req.session.user = username;
+      req.send(getReference(currentUser));
+    }
+    else {
+      res.send('WRONG_PASSWORD');
+    }
+    // bcrypt.compare(password, currentUser.password, function(err, passRes) {
+    //   if (passRes == false) {
+    //     res.send('WRONG_PASSWORD')
+    //   }
+    //   else {
+    //     res.send(getReference(currentUser));
+    //   }
+    // });
+    
 	}
   else {
     res.send('USER_DOES_NOT_EXIST');
@@ -181,6 +186,11 @@ router.get('/createUser', function(req, res){
   console.log("Make user");
   var username = req.query.username;
 	var password = req.query.password;
+  if (userExists(username))
+  {
+    res.send('USER_EXISTS');
+    return''
+  }
   var user = {
     user: username,
     password: password
