@@ -22,8 +22,8 @@ function userExists(user) {
     connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows) {
         if (err)
           throw err;
-          
-        return rows > 0;
+
+        return rows.length > 0;
     });
 };
 
