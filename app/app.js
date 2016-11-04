@@ -25,7 +25,7 @@ function userExists(user) {
 
         console.log("Current user rows: " + rows);
 
-        return rows.length > 0;
+        return (rows.length > 0);
     });
 };
 
@@ -42,14 +42,11 @@ function createNewUser(username, password) {
   connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [username, hash], function(err2) {
     if (err2)
       throw err2;
-
-    return true;
   });
     // var query2 = 'INSERT INTO citations (user, citationID, title, link, notes) VALUES (' + user.user + user.citationID + user.title + user.link + user.notes + ')';
     // connection.query(query2, function(err) {
     //     if (err) throw err;
     // });
-    return false;
 };
 
 //  Takes in username in string format.
@@ -199,20 +196,13 @@ router.get('/createUser', function(req, res){
   
   if (userExists(username))
   {
+    console.log("User " + username + " exists, so we will not create a new user account.");
     res.send('USER_EXISTS');
   }
   else
   {
-    if (createNewUser(username, password))
-    {
-      res.send('SUCCESS');
-    }
-    else
-    {
-      res.send('FAILURE');
-    }
-  } 
- 
+    if (createNewUser(username, password));
+  }
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
