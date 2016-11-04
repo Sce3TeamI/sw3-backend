@@ -227,6 +227,7 @@ router.get('/addReference', function(req, res){
     user: user
   };
   addReference(reference)
+  res.send('REF_ADDED');
 });
 
 router.get('/removeReference', function(req, res){
