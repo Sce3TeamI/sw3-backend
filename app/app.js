@@ -32,7 +32,7 @@ function userExists(email) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-    var query1 = 'INSERT INTO users (userID, user, password) VALUES (' + user.userID + user.user + user.password + ')';
+    var query1 = 'INSERT INTO users (userID, user, password) VALUES (NULL' + user.user + user.password + ')';
     connection.query(query1, function(err) {
         if (err) throw err;
     });
