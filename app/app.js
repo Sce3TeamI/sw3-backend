@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
+var express = require('express');
 var config = require("./config.json");
 var connection;
 
@@ -118,7 +119,6 @@ function closeConnection() {
 
 
 /***Here starts the rest-api code.***/
-var express = require('express');
 var app = express();
 var router = express.Router();
 var API_PORT = 8998 //***TODO: SET THIS***
