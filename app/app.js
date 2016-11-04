@@ -32,7 +32,7 @@ function userExists(user) {
 function createNewUser(user) {
   var salt = bcrypt.genSaltSync(10);
 
-  console.log("Attempting to hash " + user + " with salt " + salt);
+  console.log("Attempting to hash " + user.password + " with salt " + salt);
 
   var hash = bcrypt.hashSync(user.password, salt);
   
