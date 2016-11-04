@@ -2,6 +2,9 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 var express = require('express');
 var config = require("./config.json");
+var cookieParser = require("cookie-parser");
+var session = require("express-session");
+
 var connection = mysql.createConnection(
   {
     host        : config.host,
@@ -65,17 +68,14 @@ function setPassword(user) {
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
     var result = null;
+    console.log("Getting all citations for user " + user);
     connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
-      if (err) throw err;
-      if (rows)
-        result =  JSON.stringify(rows);
-      else
-        result = 0;
+      if (err)
+        throw err;
+
+      return JSON.stringify(rows);
     });
-
-    while(!result);
-
-    return result;
+    
 };
 
 function addReference(reference) {
@@ -135,6 +135,15 @@ function closeConnection() {
 var app = express();
 var router = express.Router();
 var API_PORT = 3000 //***TODO: SET THIS***
+app.use(cookieParser());
+app.use(session(
+  {
+    secret: "KNX3VpZS25qH2jP9TSC5896b6nv28n",
+    resave: false,
+    saveUninitialized: true
+  }
+));
+
 app.use('/api', router);
 app.listen(API_PORT);
 
@@ -160,7 +169,21 @@ router.get('/loginUser', function(req, res) {
       {
         req.session.user = user.user;
         req.session.id = user.userID;
-        req.send(getReference(user.user));
+
+        console.log("Getting all citations for user " + user);
+        connection.query('SELECT * FROM citations WHERE user = ?', [user.user], function(err, rows) {
+        if (err)
+          throw err;
+
+          var data =
+          {
+              "username": user.user,
+              "userID": user.userid,
+              "citations": rows
+          };
+
+          res.send(data);
+        });
       }
       else
       {
