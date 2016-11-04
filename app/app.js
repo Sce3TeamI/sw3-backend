@@ -25,7 +25,7 @@ function userExists(user) {
 
         console.log("The current user appears " + rows.length + " times.");
         var count = rows.length;
-        
+
         if (count > 0)
           return true;
         else  
@@ -198,7 +198,7 @@ router.get('/createUser', function(req, res){
   
   console.log("Make user: " + username);
   
-  if (userExists(username))
+  if (userExists(username) == true)
   {
     console.log("User " + username + " exists, so we will not create a new user account.");
     res.send('USER_EXISTS');
