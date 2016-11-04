@@ -8,7 +8,7 @@ var connection;
 
 //  Sets up mysql connection.
 function setupConnection() {
-    connection = mysql.connection({
+    connection = mysql.createConnection({
     host        : config.host,
     user        : config.user,
     password    : config.password,
@@ -197,7 +197,7 @@ router.get('/createUser', function(req, res){
     user: username,
     password: password
   };
-  CreateUser(user);
+  createNewUser(user);
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
