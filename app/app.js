@@ -108,7 +108,7 @@ function addReference(reference) {
 function editReference(reference) {
   setupConnection();
   var query = 'UPDATE citations SET link=' + reference.link + ', notes=' + reference.notes + ', title=' + reference.title + 'WHERE citationID=' + reference.citationID + ')';
-  connection.query(getQuery, function(err) {
+  connection.query(query, function(err) {
     if (err) throw err;
   });
 };
