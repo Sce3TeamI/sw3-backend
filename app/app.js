@@ -70,13 +70,10 @@ function getReference(user) {
     var result = null;
     console.log("Getting all citations for user " + user);
     connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
-      if (err) throw err;
-      if (rows)
-        result =  JSON.stringify(rows);
-      else
-        result = 1;
+      if (err)
+        throw err;
 
-      return result;
+      return JSON.stringify(rows);
     });
     
 };
