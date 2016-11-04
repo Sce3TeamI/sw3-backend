@@ -172,7 +172,7 @@ router.get('/loginUser', function(req, res) {
       {
         req.session.user = user.user;
         req.session.id = user.userID;
-        req.send(getReference(user.user));
+        res.send(getReference(user.user));
       }
       else
       {
