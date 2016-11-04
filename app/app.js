@@ -23,7 +23,7 @@ function userExists(user) {
         if (err)
           throw err;
 
-        console.log("Current user rows: " + rows);
+        console.log("The current user appears " + rows.length + " times.");
 
         return (rows.length > 0);
     });
