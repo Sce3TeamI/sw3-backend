@@ -2,20 +2,16 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 var express = require('express');
 var config = require("./config.json");
-var connection;
-
-// setupConnection();
-
-//  Sets up mysql connection.
-function setupConnection() {
-    connection = mysql.createConnection({
+var connection = mysql.createConnection(
+  {
     host        : config.host,
     user        : config.user,
     password    : config.password,
     database    : config.database,
     port        : config.port
-    })
-};
+  }
+);
+
 
 
 ///// Functions to deal with the USER /////
@@ -23,7 +19,6 @@ function setupConnection() {
 //  Checks to see if user exists.
 //  Returns true or false
 function userExists(user) {
-    setupConnection();
     var query = 'SELECT * FROM users WHERE user = ' + user;
     connection.query(query, function(err, rows) {
         if (err) throw err;
@@ -36,7 +31,6 @@ function userExists(user) {
 // Creates new user on the database.
 // Takes an input of a JSON object.
 function createNewUser(user) {
-    setupConnection();
     var query1 = 'INSERT INTO users (userID, user, password) VALUES (NULL, ' + user.user + ', NULL)';
     connection.query(query1, function(err) {
         if (err) throw err;
@@ -53,7 +47,6 @@ function createNewUser(user) {
 //  Takes in username in string format.
 //  Returns user object in JSON
 function getUser(user) {
-    setupConnection();
     var retUser;
     // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
     var query = 'SELECT * FROM users'
@@ -68,7 +61,6 @@ function getUser(user) {
 //  Updates password for the inputted user.
 //  Takes in user as an object with user and password sub-variables.
 function setPassword(user) {
-  setupConnection();
   bcrypt.hash(user.password, 0, function(err, hash) {
     if (err) throw err;
 
@@ -86,7 +78,6 @@ function setPassword(user) {
 //  Takes in username in string format.
 //  Returns references assigned to inputted user as a JSON string.
 function getReference(user) {
-    setupConnection();
     var result;
     var query = 'SELECT * FROM citations WHERE user = ' + user;
     connection.query(query, function(err, rows) {
@@ -98,7 +89,6 @@ function getReference(user) {
 };
 
 function addReference(reference) {
-  setupConnection();
   var query = 'INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL,' + reference.link + ',' + reference.notes + ',' + reference.title + ',' + reference.user + ')'
   connection.query(query, function(err) {
     if (err) throw err;
@@ -106,7 +96,6 @@ function addReference(reference) {
 };
 
 function editReference(reference) {
-  setupConnection();
   var query = 'UPDATE citations SET link=' + reference.link + ', notes=' + reference.notes + ', title=' + reference.title + 'WHERE citationID=' + reference.citationID + ')';
   connection.query(query, function(err) {
     if (err) throw err;
@@ -114,7 +103,6 @@ function editReference(reference) {
 };
 
 function removeReference(reference) {
-  setupConnection();
   var query = 'DELETE FROM citations WHERE citationID =' + reference;
   connection.query(query, function(err) {
     if (err) throw err;
@@ -126,7 +114,6 @@ function removeReference(reference) {
 
 //  Terminates the mysql connection.
 function closeConnection() {
-    setupConnection();
     connection.end();
 };
 
