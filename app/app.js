@@ -259,7 +259,7 @@ router.get('/getUserReferences', function(req, res){
   var userRefs = getReference(user);
 
   console.log("Getting all citations for user " + user);
-  connection.query('SELECT * FROM citations WHERE user = ?', [user], function(err, rows) {
+  connection.query('SELECT * FROM citations WHERE user = ?', [req.session.id], function(err, rows) {
     if (err)
       throw err;
 
