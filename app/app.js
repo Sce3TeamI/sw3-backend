@@ -236,7 +236,7 @@ router.get('/editReference', function(req, res){
   var title = req.query.title;
   var link = req.query.link;
   var notes = req.query.link;
-  var user = req.query.user;
+  var user = req.session.userid;
   var reference = {
     citationID: citationID,
     title: title,
