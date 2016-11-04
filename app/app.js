@@ -186,8 +186,8 @@ router.get('/loginUser', function(req, res) {
 
 //CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
 router.get('/createUser', function(req, res){
-  var username = req.query.username;
-	var password = req.query.password;
+  var username = req.query["username"];
+	var password = req.query["password"];
   
   console.log("Make user: " + username);
   
