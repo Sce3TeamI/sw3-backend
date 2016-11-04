@@ -162,13 +162,13 @@ router.get('/loginUser', function(req, res) {
         res.send('WRONG_PASSWORD')
       }
       else {
-        res.send(currentUser)
+        res.send(getReference(currentUser));
       }
     });
 	}
 });
 
-//CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_EMAIL&password=INPUT_PASSWORD
+//CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
 router.get('/createUser', function(req, res){
   console.log("Make user");
   var username = req.query.username;
@@ -177,14 +177,18 @@ router.get('/createUser', function(req, res){
     user: username,
     password: password
   };
-  CreatUser(user);
+  CreateUser(user);
 });
 
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
 router.get('/addReference', function(req, res){
   //var refID = req.query.referenceID
   //title, link, notes,
-  
+  var title = req.query.title;
+  var link = req.query.link;
+  var notes = req.query.link;
+  var user = req.query.user;
+
 });
 
 router.get('/removeRefence', function(req, res){
