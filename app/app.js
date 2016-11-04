@@ -75,11 +75,10 @@ function getReference(user) {
         result =  JSON.stringify(rows);
       else
         result = 1;
+
+      return result;
     });
-
-    while(!result);
-
-    return result;
+    
 };
 
 function addReference(reference) {
