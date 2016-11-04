@@ -268,7 +268,7 @@ router.get('/getUserReferences', function(req, res){
   res.send(userRefs);
 });
 
-router.get('/logout', function(req, rest)
+router.get('/logout', function(req, res)
 {
   req.session.destroy();
   res.send("LOGGED_OUT");
