@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
+var config = require("./config.json");
 var connection;
 
 // setupConnection();
@@ -7,11 +8,11 @@ var connection;
 //  Sets up mysql connection.
 function setupConnection() {
     connection = mysql.connection({
-    host        : 'localhost',
-    user        : 'root',
-    password    : 'root',
-    database    : 'test2',
-    port        : '8889'
+    host        : config.host,
+    user        : config.user,
+    password    : config.password,
+    database    : config.database,
+    port        : config.port
     })
 };
 
@@ -166,7 +167,7 @@ router.get('/createUser', function(req, res){
 //User Login Function. Make a URI: http://HOST:PORT/api/addreference?
 router.get('/addReference', function(req, res){
   //var refID = req.query.referenceID
-  
+
 });
 
 router.get('/removeRefence', function(req, res){
