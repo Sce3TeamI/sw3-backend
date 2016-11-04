@@ -149,28 +149,28 @@ router.get('/loginUser', function(req, res) {
 	var password = req.query.password;
   console.log("Username: " + username);
   console.log("Password: " + password);
-	if (userExists(username)){
-		var currentUser = JSON.parse(getUser(username));
-    if (bcrypt.compareSync(password, currentUser.password)) {
-      req.session.user = username;
-      req.send(getReference(currentUser));
+
+  connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
+  {
+    if (rows.length > 0)
+    {
+      var user = rows[0];
+      if (bcrypt.compareSync(password, user.password))
+      {
+        req.session.user = user.user;
+        req.session.id = user.userID;
+         req.send(getReference(user));
+      }
+      else
+      {
+        res.send('WRONG_PASSWORD');
+      }
     }
-    else {
-      res.send('WRONG_PASSWORD');
+    else
+    {
+      res.send('WRONG_USERNAME');
     }
-    // bcrypt.compare(password, currentUser.password, function(err, passRes) {
-    //   if (passRes == false) {
-    //     res.send('WRONG_PASSWORD')
-    //   }
-    //   else {
-    //     res.send(getReference(currentUser));
-    //   }
-    // });
-    
-	}
-  else {
-    res.send('USER_DOES_NOT_EXIST');
-  }
+  });
 });
 
 //CreatUser Funtion. Make a URI: http://HOST:PORT/api/createuser?username=INPUT_USERNAME&password=INPUT_PASSWORD
