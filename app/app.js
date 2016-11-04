@@ -79,7 +79,7 @@ function getReference(user) {
 };
 
 function addReference(reference) {
-  connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, reference.user], function(err) {
+  connection.query('INSERT INTO citations (citationID, link, notes, title, user) VALUES (NULL, ?, ?, ?, ?)', [reference.link, reference.notes, reference.title, req.session.userid], function(err) {
     if (err) throw err;
   });
 };
@@ -228,7 +228,7 @@ router.get('/addReference', function(req, res){
   var title = req.query.title;
   var link = req.query.link;
   var notes = req.query.link;
-  var user = req.query.user;
+  var user = req.session.userid;
   var reference = {
     title: title,
     link: link,
