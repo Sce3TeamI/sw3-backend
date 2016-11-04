@@ -158,7 +158,7 @@ router.get('/loginUser', function(req, res) {
       if (bcrypt.compareSync(password, user.password))
       {
         req.session.user = user.user;
-        req.session.id = user.userID;
+        req.session.userid = user.userID;
 
         console.log("Getting all citations for user " + user);
         connection.query('SELECT * FROM citations WHERE user = ?', [user.user], function(err, rows) {
@@ -259,7 +259,7 @@ router.get('/getUserReferences', function(req, res){
   var userRefs = getReference(user);
 
   console.log("Getting all citations for user " + user);
-  connection.query('SELECT * FROM citations WHERE user = ?', [req.session.id], function(err, rows) {
+  connection.query('SELECT * FROM citations WHERE user = ?', [req.session.userid], function(err, rows) {
     if (err)
       throw err;
 
