@@ -20,9 +20,10 @@ var connection = mysql.createConnection(
 //  Returns true or false
 function userExists(user) {
     connection.query('SELECT * FROM users WHERE user = ?', [user], function(err, rows) {
-        if (err) throw err;
-        if (rows) return true;
-        else return false;
+        if (err)
+          throw err;
+          
+        return rows > 0;
     });
 };
 
