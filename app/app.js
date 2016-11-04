@@ -27,7 +27,7 @@ function createNewUser(username, password) {
   console.log("Attempting to hash " + password + " with salt " + salt);
 
   var hash = bcrypt.hashSync(password, salt);
-  
+
   connection.query('INSERT INTO users (userID, user, password) VALUES (NULL, ?, ?)', [username, hash], function(err2) {
     if (err2)
       throw err2;
@@ -39,7 +39,7 @@ function createNewUser(username, password) {
 function getUser(username) {
     var retUser;
     // var query = 'SELECT users.userID, users.password, citations.* FROM users JOIN citations ON users.user = citations.user WHERE citations.user = ' + user;
-    var query = 
+    var query =
     connection.query('SELECT * FROM users WHERE username = ?', [username], function(err, rows) {
         if (err) throw err;
         if (rows)
@@ -75,7 +75,7 @@ function getReference(user) {
 
       return JSON.stringify(rows);
     });
-    
+
 };
 
 function addReference(reference) {
@@ -201,9 +201,9 @@ router.get('/loginUser', function(req, res) {
 router.get('/createUser', function(req, res){
   var username = req.query.username;
 	var password = req.query.password;
-  
+
   console.log("Make user: " + username);
-  
+
   connection.query('SELECT * FROM users WHERE user = ?', [username], function(err, rows)
   {
     if (rows.length > 0)
@@ -233,11 +233,13 @@ router.get('/addReference', function(req, res){
     user: user
   };
   addReference(reference)
+  res.send('REF_ADDED');
 });
 
 router.get('/removeRefence', function(req, res){
   var citationID = req.query.citationID;
   removeRefence(citationID);
+  res.send('REF_REMOVED');
 });
 
 router.get('/editReference', function(req, res){
@@ -253,12 +255,14 @@ router.get('/editReference', function(req, res){
     notes: notes,
     user: user
   };
-  editReference(reference);
+  var newRef = editReference(reference);
+  res.send(newRef);
 });
 
 router.get('/getUserReferences', function(req, res){
   var user = req.query.user;
-  getReference(user);
+  var userRefs = getReference(user);
+  res.send(userRefs);
 });
 
 router.get('/logout', function(req, rest)
